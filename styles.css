@@ -1052,7 +1052,7 @@ a:hover { text-decoration: underline; }
 .source-text-card p, .source-text-card li { color: #6f5968; line-height: 1.75; }
 .source-text-card ul { padding-left: 1.1rem; }
 
-/* GitHub食养资料包与网页内查询 */
+/* 食养指南网页内查询 */
 .guide-download-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1.2rem 0 1.4rem; }
 .guide-download-card { background: rgba(255,255,255,0.9); border: 1px solid rgba(156,101,116,0.20); border-radius: 18px; padding: 1rem; box-shadow: 0 12px 30px rgba(91,65,79,0.08); }
 .guide-download-card h3 { margin: .35rem 0 .55rem; color: #58384d; font-size: 1.02rem; line-height: 1.35; }
@@ -1067,7 +1067,7 @@ a:hover { text-decoration: underline; }
 .source-fulltext summary { cursor: pointer; color: var(--primary-ink); font-weight: 650; line-height: 1.55; }
 .source-fulltext summary:hover { text-decoration: underline; }
 
-/* 食养指南分目录：不改变整体配色，只补层级结构 */
+/* 食养指南查询：保留整体配色，仅补充卡片层级 */
 .directory-list { display: flex; flex-wrap: wrap; gap: .45rem; margin: .2rem 0 .5rem; }
 .directory-list span { border-radius: 999px; padding: .2rem .58rem; background: #fff2ee; color: #77455a; font-size: .78rem; font-weight: 700; border: 1px solid rgba(156,101,116,0.16); }
 .guide-subdir { margin-top: .85rem; padding: .85rem; border: 1px solid rgba(156,101,116,0.18); border-radius: 16px; background: rgba(255,250,247,0.72); }
@@ -1086,3 +1086,86 @@ a:hover { text-decoration: underline; }
 .wechat-qr img { width: 176px; max-width: 100%; border-radius: 18px; border: 1px solid rgba(156,101,116,0.22); box-shadow: 0 12px 30px rgba(91,65,79,0.10); background: #fff; padding: 8px; }
 .wechat-qr figcaption { margin-top: .55rem; color: #77455a; font-size: .86rem; font-weight: 700; }
 @media (max-width: 760px) { .contact-panel { grid-template-columns: 1fr; } .wechat-qr { justify-self: start; } }
+
+
+/* 11个食养指南：查询 + 卡片 + 点开详情（参考旧痛风页交互） */
+.guide-query-panel {
+  margin: 22px 0 20px;
+  padding: 18px;
+  border: 1px solid rgba(245, 214, 193, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+  box-shadow: 0 18px 50px rgba(20, 14, 40, 0.18);
+}
+.guide-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.guide-tab {
+  border: 1px solid rgba(245, 214, 193, 0.25);
+  border-radius: 999px;
+  padding: 11px 12px;
+  color: var(--text);
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  font-weight: 700;
+}
+.guide-tab.is-active {
+  color: #2f2140;
+  background: linear-gradient(135deg, #f5d6c1, #d9a7b8);
+  box-shadow: 0 10px 26px rgba(217,167,184,0.28);
+}
+.guide-filter-bar { margin: 8px 0 14px; }
+.guide-filter-bar .chip { margin: 4px; }
+.guide-result-summary {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.query-result-grid { align-items: stretch; }
+.query-card {
+  border: 1px solid rgba(245,214,193,0.18);
+  border-radius: 22px;
+  padding: 18px;
+  background: rgba(255,255,255,0.065);
+  box-shadow: 0 16px 42px rgba(8, 6, 22, 0.18);
+}
+.query-card-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+.query-kind-badge {
+  display:inline-flex;
+  align-items:center;
+  padding: 3px 9px;
+  border-radius:999px;
+  font-size:0.76rem;
+  color:#f9e7d8;
+  background:rgba(245,214,193,0.12);
+  border:1px solid rgba(245,214,193,0.22);
+}
+.query-card h3 { margin: 6px 0 8px; }
+.query-guide-line { color: var(--muted); font-size: 0.9rem; }
+.query-excerpt { margin-top: 10px; }
+.query-details { margin-top: 12px; }
+.query-details > summary {
+  cursor:pointer;
+  list-style:none;
+  display:inline-flex;
+  border-radius:999px;
+  padding:8px 12px;
+  background:rgba(245,214,193,0.12);
+  border:1px solid rgba(245,214,193,0.22);
+  color:#f5d6c1;
+  font-weight:700;
+}
+.query-details > summary::-webkit-details-marker { display:none; }
+.query-detail-body {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(9, 7, 24, 0.22);
+  max-height: 520px;
+  overflow: auto;
+}
+.query-detail-body h4 { margin: 14px 0 8px; color:#f5d6c1; }
+.query-detail-body p, .query-detail-body li, .query-detail-body td { font-size: 0.92rem; }
+.query-detail-body ul { padding-left: 1.2em; }
+.query-table { width:100%; border-collapse: collapse; margin: 10px 0; font-size:0.9rem; }
+.query-table td { border:1px solid rgba(245,214,193,0.18); padding:7px 9px; vertical-align:top; }
+.query-links { margin-top: 12px; }
+@media (max-width: 720px) { .guide-tabs { grid-template-columns: 1fr; } }

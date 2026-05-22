@@ -676,7 +676,7 @@
   }
 
 
-  /* ---------- GitHub食养资料包与网页内查询 ---------- */
+  /* ---------- 11个食养指南：查询 + 卡片 + 点开详情 ---------- */
   function makeEl(tag, attrs, text) {
     const node = document.createElement(tag);
     if (attrs) {
@@ -780,10 +780,10 @@
       return sec.content && sec.content.length > 60;
     });
     if (!sections.length && (doc.text || "").trim()) {
-      return [{ title: doc.label || doc.file || "指南原文资料", content: doc.text, file: doc.file, rawUrl: doc.rawUrl, githubUrl: doc.githubUrl }];
+      return [{ title: doc.label || doc.file || "指南原文资料", content: doc.text, file: doc.file }];
     }
     return sections.slice(0, 80).map(function (sec) {
-      return { title: sec.title, content: sec.content, file: doc.file, rawUrl: doc.rawUrl, githubUrl: doc.githubUrl };
+      return { title: sec.title, content: sec.content, file: doc.file };
     });
   }
 
@@ -809,11 +809,11 @@
         const seasonShort = entrySeason.replace("季", "");
         if (entrySeason !== "未标注季节" && t.indexOf(seasonShort) < 0) prefix.push(entrySeason);
         if (currentType && !/地区|季|食谱/.test(currentType)) prefix.push(currentType);
-        items.push({ kind: "recipe", season: entrySeason, region: entryRegion, subtype: currentType || "", title: (prefix.length ? prefix.join(" · ") + " · " : "") + t, content: sec.content || doc.text || "", rawUrl: doc.rawUrl, githubUrl: doc.githubUrl, file: doc.file });
+        items.push({ kind: "recipe", season: entrySeason, region: entryRegion, subtype: currentType || "", title: (prefix.length ? prefix.join(" · ") + " · " : "") + t, content: sec.content || doc.text || "", file: doc.file });
       }
     });
     if (!items.length) parseRecipeDocByLines(doc).forEach(function (x) { items.push(x); });
-    if (!items.length && (doc.text || "").trim()) items.push({ kind: "recipe", season: "未标注季节", region: currentRegion, subtype: "", title: doc.label || doc.file || "食谱资料", content: doc.text, rawUrl: doc.rawUrl, githubUrl: doc.githubUrl, file: doc.file });
+    if (!items.length && (doc.text || "").trim()) items.push({ kind: "recipe", season: "未标注季节", region: currentRegion, subtype: "", title: doc.label || doc.file || "食谱资料", content: doc.text, file: doc.file });
     return items;
   }
 
@@ -832,7 +832,7 @@
     });
     return starts.map(function (st, i) {
       const end = starts[i + 1] ? starts[i + 1].idx : Math.min(lines.length, st.idx + 90);
-      return { kind: "recipe", season: st.season, region: st.region, subtype: "", title: st.region + " · " + st.title, content: lines.slice(st.idx, end).join("\n").trim(), rawUrl: doc.rawUrl, githubUrl: doc.githubUrl, file: doc.file };
+      return { kind: "recipe", season: st.season, region: st.region, subtype: "", title: st.region + " · " + st.title, content: lines.slice(st.idx, end).join("\n").trim(), file: doc.file };
     });
   }
 
@@ -847,10 +847,10 @@
         let syndrome = currentSyndrome;
         const dash = t.split(/—|--|－/);
         if (dash.length > 1 && looksLikeSyndrome(dash[0])) syndrome = cleanTitle(dash[0]);
-        items.push({ kind: "formula", syndrome: syndrome, title: t, content: sec.content || doc.text || "", rawUrl: doc.rawUrl, githubUrl: doc.githubUrl, file: doc.file });
+        items.push({ kind: "formula", syndrome: syndrome, title: t, content: sec.content || doc.text || "", file: doc.file });
       }
     });
-    if (!items.length && (doc.text || "").trim()) items.push({ kind: "formula", syndrome: "见全文", title: doc.label || doc.file || "食养方", content: doc.text, rawUrl: doc.rawUrl, githubUrl: doc.githubUrl, file: doc.file });
+    if (!items.length && (doc.text || "").trim()) items.push({ kind: "formula", syndrome: "见全文", title: doc.label || doc.file || "食养方", content: doc.text, file: doc.file });
     return items;
   }
 
@@ -858,117 +858,216 @@
     return list.reduce(function (acc, item) { const key = fn(item) || "未分类"; if (!acc[key]) acc[key] = []; acc[key].push(item); return acc; }, {});
   }
 
-  function appendEntryDetails(parent, entry) {
-    const details = makeEl("details", { class: "source-fulltext entry-details" });
-    details.appendChild(makeEl("summary", null, entry.title));
-    details.appendChild(makeEl("p", { class: "entry-meta" }, (entry.file || "") + (entry.subtype ? " · " + entry.subtype : "")));
-    const flinks = makeEl("p", { class: "guide-links" });
-    if (entry.githubUrl) flinks.appendChild(makeEl("a", { class: "ext-link-soft", href: entry.githubUrl }, "GitHub文件 ↗"));
-    if (entry.rawUrl) { flinks.appendChild(document.createTextNode(" ")); flinks.appendChild(makeEl("a", { class: "ext-link-soft", href: entry.rawUrl }, "纯文本打开 ↗")); }
-    details.appendChild(flinks);
-    details.appendChild(makeEl("pre", null, entry.content || ""));
-    parent.appendChild(details);
+  function htmlEscape(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
-  function appendOriginalDirectory(parent, originalItems, guide) {
-    const section = makeEl("section", { class: "guide-subdir original-subdir" });
-    section.appendChild(makeEl("h4", null, "1. 指南原文"));
-    section.appendChild(makeEl("p", { class: "subdir-note" }, "网页内提供可检索的指南正文/核心资料；如需核验，请点击官方原文入口或 PDF。"));
-    const links = makeEl("p", { class: "guide-links" });
-    links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.officialUrl }, "官方原文入口 ↗"));
-    if (guide.pdfUrl) { links.appendChild(document.createTextNode(" ")); links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.pdfUrl }, "原文PDF ↗")); }
-    section.appendChild(links);
-    if (!originalItems.length) section.appendChild(makeEl("p", { class: "empty-note" }, "该资料包暂未整理出网页内原文资料，请点击官方原文入口核对。"));
-    originalItems.forEach(function (entry) { appendEntryDetails(section, entry); });
-    parent.appendChild(section);
+  function markdownToHtml(text) {
+    const src = String(text || "").trim();
+    if (!src) return "";
+    const lines = src.split(/\n/);
+    const out = [];
+    let inList = false;
+    let inTable = false;
+    function closeList() { if (inList) { out.push("</ul>"); inList = false; } }
+    function closeTable() { if (inTable) { out.push("</tbody></table>"); inTable = false; } }
+    function inline(s) {
+      return htmlEscape(s)
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>");
+    }
+    lines.forEach(function (line) {
+      const t = line.trim();
+      if (!t) { closeList(); closeTable(); return; }
+      if (/^#{1,6}\s+/.test(t)) {
+        closeList(); closeTable();
+        out.push("<h4>" + inline(cleanTitle(t)) + "</h4>");
+        return;
+      }
+      if (/^\|/.test(t) && /\|$/.test(t)) {
+        closeList();
+        if (/^\|\s*-+/.test(t)) return;
+        const cells = t.split("|").slice(1, -1).map(function (c) { return inline(c.trim()); });
+        if (!inTable) { out.push('<table class="query-table"><tbody>'); inTable = true; }
+        out.push("<tr>" + cells.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>");
+        return;
+      }
+      closeTable();
+      if (/^[-*]\s+/.test(t)) {
+        if (!inList) { out.push("<ul>"); inList = true; }
+        out.push("<li>" + inline(t.replace(/^[-*]\s+/, "")) + "</li>");
+        return;
+      }
+      closeList();
+      out.push("<p>" + inline(t.replace(/^>\s*/, "")) + "</p>");
+    });
+    closeList(); closeTable();
+    return out.join("");
   }
 
-  function appendRecipeDirectory(parent, recipeItems) {
-    const section = makeEl("section", { class: "guide-subdir recipe-subdir" });
-    section.appendChild(makeEl("h4", null, "2. 四季食谱"));
-    section.appendChild(makeEl("p", { class: "subdir-note" }, "按“春、夏、秋、冬 + 地区”整理；未标明季节或地区的内容暂放入未标注分组。"));
-    if (!recipeItems.length) { section.appendChild(makeEl("p", { class: "empty-note" }, "该资料包暂未整理出可单独展开的四季食谱。")); parent.appendChild(section); return; }
-    const seasonOrder = ["春季", "夏季", "秋季", "冬季", "冬春季", "夏秋季", "四季/全年", "未标注季节"];
-    const bySeason = groupBy(recipeItems, function (x) { return x.season; });
-    seasonOrder.concat(Object.keys(bySeason).filter(function (k) { return seasonOrder.indexOf(k) < 0; })).forEach(function (season) {
-      const seasonItems = bySeason[season]; if (!seasonItems || !seasonItems.length) return;
-      const seasonDetails = makeEl("details", { class: "season-group" });
-      seasonDetails.appendChild(makeEl("summary", null, season + "（" + seasonItems.length + "条）"));
-      const byRegion = groupBy(seasonItems, function (x) { return x.region; });
-      Object.keys(byRegion).sort(function (a, b) { return a.localeCompare(b, "zh-Hans-CN"); }).forEach(function (region) {
-        const regionDetails = makeEl("details", { class: "region-group" });
-        regionDetails.appendChild(makeEl("summary", null, region + "（" + byRegion[region].length + "条）"));
-        byRegion[region].forEach(function (entry) { appendEntryDetails(regionDetails, entry); });
-        seasonDetails.appendChild(regionDetails);
+  function excerpt(text, n) {
+    const plain = String(text || "")
+      .replace(/^#{1,6}\s+/gm, "")
+      .replace(/\|/g, " ")
+      .replace(/\*\*/g, "")
+      .replace(/[-*]\s+/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return plain.length > (n || 120) ? plain.slice(0, n || 120) + "……" : plain;
+  }
+
+  function parseFormulaDocByBold(doc) {
+    const text = doc.text || "";
+    const lines = text.split(/\n/);
+    const starts = [];
+    let syndrome = "未标注证型";
+    let category = "食养方";
+    lines.forEach(function (line, idx) {
+      const t = line.trim();
+      const h2 = t.match(/^##\s+(.+)/);
+      if (h2) { syndrome = cleanTitle(h2[1]); category = "食养方"; return; }
+      const h3 = t.match(/^###\s+(.+)/);
+      if (h3) { category = cleanTitle(h3[1]); return; }
+      const b = t.match(/^\*\*(\d+[\.、]\s*[^*]+)\*\*/);
+      if (b) starts.push({ idx: idx, title: cleanTitle(b[1]), syndrome: syndrome, category: category });
+    });
+    return starts.map(function (st, i) {
+      const end = starts[i + 1] ? starts[i + 1].idx : lines.length;
+      return { kind: "formula", syndrome: st.syndrome, category: st.category, title: st.title, content: lines.slice(st.idx, end).join("\n").trim(), file: doc.file };
+    });
+  }
+
+  function parseFormulaDocForCards(doc) {
+    const boldItems = parseFormulaDocByBold(doc);
+    if (boldItems.length) return boldItems;
+    return parseFormulaDoc(doc);
+  }
+
+  function buildGuideQueryData() {
+    const guides = window.FOOD_GUIDE_DATA || [];
+    const all = { original: [], recipe: [], formula: [] };
+    guides.forEach(function (guide) {
+      const docs = (guide.docs || []).filter(shouldShowGuideDoc);
+      const counts = { original: 0, recipe: 0, formula: 0 };
+      docs.forEach(function (doc) {
+        const kind = guideDocKind(doc);
+        if (kind === "original") {
+          parseOriginalDoc(doc).slice(0, 18).forEach(function (x) {
+            counts.original += 1;
+            all.original.push(Object.assign({}, x, { kind: "original", guide: guide, guideId: guide.id, guideTitle: guide.title, year: guide.year }));
+          });
+        }
+        if (kind === "recipe") {
+          parseRecipeDoc(doc).forEach(function (x) {
+            counts.recipe += 1;
+            all.recipe.push(Object.assign({}, x, { kind: "recipe", guide: guide, guideId: guide.id, guideTitle: guide.title, year: guide.year }));
+          });
+        }
+        if (kind === "formula") {
+          parseFormulaDocForCards(doc).forEach(function (x) {
+            counts.formula += 1;
+            all.formula.push(Object.assign({}, x, { kind: "formula", guide: guide, guideId: guide.id, guideTitle: guide.title, year: guide.year }));
+          });
+        }
       });
-      section.appendChild(seasonDetails);
+      all.original.unshift({ kind: "original", guide: guide, guideId: guide.id, guideTitle: guide.title, year: guide.year, title: guide.title, content: "国家卫生健康委发布的食养指南原文入口。请以官方通知页和 PDF 附件为准。", officialOnly: true });
+      guide._queryCounts = counts;
     });
-    parent.appendChild(section);
+    return { guides: guides, all: all };
   }
 
-  function appendFormulaDirectory(parent, formulaItems) {
-    const section = makeEl("section", { class: "guide-subdir formula-subdir" });
-    section.appendChild(makeEl("h4", null, "3. 食养方"));
-    section.appendChild(makeEl("p", { class: "subdir-note" }, "按“证型 / 类别 + 标题”整理，点开标题可查看详细内容。"));
-    if (!formulaItems.length) { section.appendChild(makeEl("p", { class: "empty-note" }, "该资料包暂未整理出单独的食养方文件。")); parent.appendChild(section); return; }
-    const bySyndrome = groupBy(formulaItems, function (x) { return x.syndrome; });
-    Object.keys(bySyndrome).sort(function (a, b) { return a.localeCompare(b, "zh-Hans-CN"); }).forEach(function (syndrome) {
-      const group = makeEl("details", { class: "formula-group" });
-      group.appendChild(makeEl("summary", null, syndrome + "（" + bySyndrome[syndrome].length + "条）"));
-      bySyndrome[syndrome].forEach(function (entry) { appendEntryDetails(group, entry); });
-      section.appendChild(group);
-    });
-    parent.appendChild(section);
+  function cardMeta(item) {
+    if (item.kind === "formula") return [item.guideTitle, item.syndrome, item.category].filter(Boolean).join(" · ");
+    if (item.kind === "recipe") return [item.guideTitle, item.season, item.region, item.subtype].filter(Boolean).join(" · ");
+    return [item.guideTitle, "官方原文/核心内容"].filter(Boolean).join(" · ");
+  }
+
+  function renderResultCard(item) {
+    const card = makeEl("article", { class: "query-card query-card-" + item.kind });
+    const badge = item.kind === "formula" ? "食养方" : item.kind === "recipe" ? "四季食谱" : "指南原文";
+    const meta = makeEl("div", { class: "query-card-meta" });
+    meta.appendChild(makeEl("span", { class: "recipe-year" }, item.year || ""));
+    meta.appendChild(makeEl("span", { class: "query-kind-badge" }, badge));
+    card.appendChild(meta);
+    card.appendChild(makeEl("h3", null, item.title || item.guideTitle || "查询结果"));
+    card.appendChild(makeEl("p", { class: "query-guide-line" }, cardMeta(item)));
+    card.appendChild(makeEl("p", { class: "query-excerpt" }, excerpt(item.content, 150)));
+
+    const details = makeEl("details", { class: "query-details" });
+    details.appendChild(makeEl("summary", null, "点开查看详细内容"));
+    const body = makeEl("div", { class: "query-detail-body" });
+    if (item.officialOnly) {
+      body.appendChild(makeEl("p", null, "这张卡片保留官方原文入口，方便读者核对正式发布版本。"));
+    } else {
+      body.innerHTML = markdownToHtml(item.content || "");
+    }
+    const links = makeEl("p", { class: "guide-links query-links" });
+    if (item.guide && item.guide.officialUrl) links.appendChild(makeEl("a", { class: "ext-link-soft", href: item.guide.officialUrl }, "官方原文入口 ↗"));
+    if (item.guide && item.guide.pdfUrl) { links.appendChild(document.createTextNode(" ")); links.appendChild(makeEl("a", { class: "ext-link-soft", href: item.guide.pdfUrl }, "原文 PDF ↗")); }
+    body.appendChild(links);
+    details.appendChild(body);
+    card.appendChild(details);
+    return card;
   }
 
   function renderFoodGuideData() {
-    const guides = window.FOOD_GUIDE_DATA || [];
-    const downloadGrid = document.querySelector("#guideDownloadGrid");
     const docGrid = document.querySelector("#foodGuideDocGrid");
-    if (!guides.length || !downloadGrid || !docGrid) return;
-    const allCards = [];
-    guides.forEach(function (guide) {
-      const docs = (guide.docs || []).filter(shouldShowGuideDoc);
-      const originalItems = [], recipeItems = [], formulaItems = [];
-      docs.forEach(function (doc) {
-        const kind = guideDocKind(doc);
-        if (kind === "original") parseOriginalDoc(doc).forEach(function (x) { originalItems.push(x); });
-        if (kind === "recipe") parseRecipeDoc(doc).forEach(function (x) { recipeItems.push(x); });
-        if (kind === "formula") parseFormulaDoc(doc).forEach(function (x) { formulaItems.push(x); });
-      });
-      const card = makeEl("article", { class: "guide-download-card" });
-      card.appendChild(makeEl("span", { class: "guide-tag" }, "国家卫健委 · " + guide.year));
-      card.appendChild(makeEl("h3", null, guide.title));
-      card.appendChild(makeEl("p", null, "资料包入口：下方可进入该指南的网页内查询目录，包含指南原文、四季食谱与食养方。"));
-      const links = makeEl("p", { class: "guide-links" });
-      links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.githubUrl }, "GitHub资料包 ↗"));
-      links.appendChild(document.createTextNode(" "));
-      links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.officialUrl }, "官方原文入口 ↗"));
-      if (guide.pdfUrl) { links.appendChild(document.createTextNode(" ")); links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.pdfUrl }, "原文PDF ↗")); }
-      card.appendChild(links); downloadGrid.appendChild(card);
+    const filterBar = document.querySelector("#guideFilterBar");
+    const tabs = Array.from(document.querySelectorAll("#foodGuideTabs .guide-tab"));
+    const search = document.querySelector("#sourceTextSearch");
+    const summary = document.querySelector("#guideResultSummary");
+    if (!docGrid || !filterBar) return;
+    const data = buildGuideQueryData();
+    let activeKind = "formula";
+    let activeGuide = "all";
 
-      const dcard = makeEl("article", { class: "source-text-card food-guide-doc-card guide-recipe-card" });
-      const searchText = [guide.title, guide.year]
-        .concat(originalItems.map(function (x) { return [x.title, x.content].join(" "); }))
-        .concat(recipeItems.map(function (x) { return [x.season, x.region, x.subtype, x.title, x.content].join(" "); }))
-        .concat(formulaItems.map(function (x) { return [x.syndrome, x.title, x.content].join(" "); }))
-        .join(" ").toLowerCase();
-      dcard.setAttribute("data-source-key", searchText);
-      dcard.appendChild(makeEl("span", { class: "recipe-year" }, "国家卫健委 · " + guide.year));
-      dcard.appendChild(makeEl("h3", null, guide.title));
-      dcard.appendChild(makeEl("p", null, "点开下面三个子目录：指南原文、四季食谱、食养方。"));
-      const quick = makeEl("div", { class: "directory-list" });
-      quick.appendChild(makeEl("span", null, "指南原文 " + originalItems.length + " 条"));
-      quick.appendChild(makeEl("span", null, "四季食谱 " + recipeItems.length + " 条"));
-      quick.appendChild(makeEl("span", null, "食养方 " + formulaItems.length + " 条"));
-      dcard.appendChild(quick);
-      appendOriginalDirectory(dcard, originalItems, guide);
-      appendRecipeDirectory(dcard, recipeItems);
-      appendFormulaDirectory(dcard, formulaItems);
-      docGrid.appendChild(dcard); allCards.push(dcard);
+    filterBar.innerHTML = "";
+    const allBtn = makeEl("button", { class: "chip is-active", type: "button", "data-guide": "all" }, "全部指南");
+    filterBar.appendChild(allBtn);
+    data.guides.forEach(function (g, idx) {
+      const shortTitle = g.title.replace(/食养指南.*/, "").replace(/^成人/, "成人");
+      const btn = makeEl("button", { class: "chip", type: "button", "data-guide": g.id }, (idx + 1) + ". " + shortTitle);
+      filterBar.appendChild(btn);
     });
-    const sourceTextSearch = document.querySelector("#sourceTextSearch");
-    if (sourceTextSearch) sourceTextSearch.addEventListener("input", function () { const q = this.value.trim().toLowerCase(); allCards.forEach(function (card) { const key = card.getAttribute("data-source-key") || ""; card.style.display = !q || key.includes(q) ? "" : "none"; }); });
+
+    function keyOf(item) {
+      return [item.title, item.content, item.guideTitle, item.year, item.season, item.region, item.subtype, item.syndrome, item.category].join(" ").toLowerCase();
+    }
+
+    function rerender() {
+      const q = (search && search.value || "").trim().toLowerCase();
+      let items = data.all[activeKind] || [];
+      if (activeGuide !== "all") items = items.filter(function (x) { return x.guideId === activeGuide; });
+      if (q) items = items.filter(function (x) { return keyOf(x).indexOf(q) >= 0; });
+      docGrid.innerHTML = "";
+      items.slice(0, 240).forEach(function (item) { docGrid.appendChild(renderResultCard(item)); });
+      if (!items.length) docGrid.appendChild(makeEl("p", { class: "empty-note" }, "没有匹配结果。可以换一个关键词，或切换到其他指南/查询类型。"));
+      if (summary) {
+        const kindLabel = activeKind === "formula" ? "食养方" : activeKind === "recipe" ? "四季食谱" : "指南原文";
+        summary.textContent = "当前显示：" + kindLabel + " · " + items.length + " 条结果" + (items.length > 240 ? "（页面先显示前 240 条，可继续输入关键词缩小范围）" : "");
+      }
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        activeKind = tab.getAttribute("data-kind") || "formula";
+        tabs.forEach(function (t) { t.classList.toggle("is-active", t === tab); t.setAttribute("aria-selected", t === tab ? "true" : "false"); });
+        rerender();
+      });
+    });
+    Array.from(filterBar.querySelectorAll("button[data-guide]")).forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        activeGuide = btn.getAttribute("data-guide") || "all";
+        Array.from(filterBar.querySelectorAll("button[data-guide]")).forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+        rerender();
+      });
+    });
+    if (search) search.addEventListener("input", rerender);
+    rerender();
   }
   renderFoodGuideData();
 

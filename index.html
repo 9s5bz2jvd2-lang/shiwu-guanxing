@@ -46,8 +46,8 @@
     <a href="#hero">首页</a>
     <a href="#about">关于本站</a>
     <a href="#source-guides">指南原文</a>
-    <a href="#recipe-search-section">食谱查询</a>
-    <a href="#source-text-library">食谱与食养方</a>
+    <a href="#source-text-library">食谱查询</a>
+    <a href="#source-text-library">食养查询</a>
     <a href="#calculator">小工具</a>
     <a href="#cosmos">营养与星空</a>
     <a href="#nightsnack">观星夜宵</a>
@@ -77,7 +77,7 @@
     </p>
     <div class="hero-cta">
       <a class="btn btn-primary" href="#source-guides">↓ 查权威指南原文</a>
-      <a class="btn btn-ghost" href="#recipe-search-section">食谱快速查询</a>
+      <a class="btn btn-ghost" href="#source-text-library">食谱快速查询</a>
       <a class="btn btn-ghost" href="#nightsnack">营养师的观星夜宵</a>
       <a class="btn btn-ghost" href="#skywatch">本月星空</a>
       <a class="btn btn-ghost" href="#contact">关注公众号：圆酱说营养</a>
@@ -147,7 +147,7 @@
           <li>不承诺减重斤数、不承诺疗效；</li>
           <li>不放置登录、注册、上传、支付按钮，不收集任何用户数据；</li>
           <li>不加载任何第三方脚本、统计或广告；</li>
-          <li>提供官方原文入口，并把 GitHub 已整理的公开食养资料做成网页内查询；正式出处以国家卫生健康委原文为准。</li>
+          <li>提供官方原文入口，并把公开食养资料做成网页内查询；正式出处以国家卫生健康委原文为准。</li>
         </ul>
       </article>
     </div>
@@ -270,7 +270,7 @@
     <article class="guide-note">
       <h3>说明</h3>
       <ul class="tight-list">
-        <li>本页保留官方原文入口，也提供下方 GitHub 资料包中的网页内查询文本；正式发布版本以国家卫生健康委原文为准。</li>
+        <li>本页保留官方原文入口，也提供下方可搜索、可点开的网页内查询；正式发布版本以国家卫生健康委原文为准。</li>
         <li>具体疾病、用药、减重、肾病、卒中恢复等问题，请回到医生与临床营养师的面对面评估。</li>
         <li>若国家卫生健康委发布新版，请优先查看新版通知页。</li>
       </ul>
@@ -278,109 +278,55 @@
   </div>
 </section>
 
-<!-- ========= 2c. 食谱快速查询 ========= -->
+<!-- ========= 2c. 查询方式提示 ========= -->
 <section class="section section-soft" id="recipe-search-section">
   <div class="container container-wide">
-    <p class="eyebrow">Recipe Finder</p>
-    <h2 class="section-h2">食谱快速查询</h2>
+    <p class="eyebrow">How to Search</p>
+    <h2 class="section-h2">食养方与四季食谱怎么查</h2>
     <p class="section-sub">
-      想查食谱时，可以先按疾病或人群搜索，再点进对应指南原文附件页查看“四季食谱、不同地区食谱示例、食养方、食物选择、地区/季节示例”等内容。
+      下方查询区已经把 11 个食养指南整理成“食养方 / 四季食谱 / 指南原文”三个入口。
+      先切换入口，再按疾病、人群、证型、地区、季节或食材搜索；看到结果卡片后，点开即可查看详细内容。
     </p>
-    <input class="filter-search recipe-search" id="recipeSearch" type="text" placeholder="搜索：肥胖 / 高血压 / 糖尿病 / 痛风 / 肾脏病 / 脑卒中 / 骨质疏松 / 肌少症 / 儿童" autocomplete="off" />
-    <div class="recipe-grid" id="recipeGrid">
-
-      <article class="recipe-card" data-recipe-key="成人高脂血症食养指南（2023年版） 血脂异常人群；重点查食物选择、烹调方式、不同地区食谱示例。">
-        <span class="recipe-year">2023</span>
-        <h3>成人高脂血症食养指南（2023年版）</h3>
-        <p>血脂异常人群；重点查食物选择、烹调方式、不同地区食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202301/f01895a06c5349ef999f25da833c166d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人高血压食养指南（2023年版） 高血压人群；重点查减盐、钾摄入、DASH式搭配和食谱示例。">
-        <span class="recipe-year">2023</span>
-        <h3>成人高血压食养指南（2023年版）</h3>
-        <p>高血压人群；重点查减盐、钾摄入、DASH式搭配和食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202301/f01895a06c5349ef999f25da833c166d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="儿童青少年生长迟缓食养指南（2023年版） 儿童青少年；重点查年龄段、优质蛋白、奶类豆类、家庭餐搭配示例。">
-        <span class="recipe-year">2023</span>
-        <h3>儿童青少年生长迟缓食养指南（2023年版）</h3>
-        <p>儿童青少年；重点查年龄段、优质蛋白、奶类豆类、家庭餐搭配示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202301/f01895a06c5349ef999f25da833c166d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人糖尿病食养指南（2023年版） 成人糖尿病人群；重点查主食分配、餐次安排、血糖友好型食谱示例。">
-        <span class="recipe-year">2023</span>
-        <h3>成人糖尿病食养指南（2023年版）</h3>
-        <p>成人糖尿病人群；重点查主食分配、餐次安排、血糖友好型食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202301/f01895a06c5349ef999f25da833c166d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人高尿酸血症与痛风食养指南（2024年版） 高尿酸血症与痛风人群；重点查嘌呤、饮水、酒精限制和食谱示例。">
-        <span class="recipe-year">2024</span>
-        <h3>成人高尿酸血症与痛风食养指南（2024年版）</h3>
-        <p>高尿酸血症与痛风人群；重点查嘌呤、饮水、酒精限制和食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202402/9ba512ba8e314a47a181db11d2fa188d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人肥胖食养指南（2024年版） 成人肥胖人群；重点查能量控制、食物选择、证型与地区食谱示例。">
-        <span class="recipe-year">2024</span>
-        <h3>成人肥胖食养指南（2024年版）</h3>
-        <p>成人肥胖人群；重点查能量控制、食物选择、证型与地区食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202402/9ba512ba8e314a47a181db11d2fa188d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="儿童青少年肥胖食养指南（2024年版） 儿童青少年肥胖；重点查家庭饮食、校餐、运动与不同年龄段食谱示例。">
-        <span class="recipe-year">2024</span>
-        <h3>儿童青少年肥胖食养指南（2024年版）</h3>
-        <p>儿童青少年肥胖；重点查家庭饮食、校餐、运动与不同年龄段食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202402/9ba512ba8e314a47a181db11d2fa188d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人慢性肾脏病食养指南（2024年版） 成人慢性肾脏病人群；重点查蛋白质、钠、钾、磷与分期相关饮食提醒。">
-        <span class="recipe-year">2024</span>
-        <h3>成人慢性肾脏病食养指南（2024年版）</h3>
-        <p>成人慢性肾脏病人群；重点查蛋白质、钠、钾、磷与分期相关饮食提醒。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100088/202402/9ba512ba8e314a47a181db11d2fa188d.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人脑卒中食养指南（2026年版） 脑卒中恢复期、后遗症期人群；重点查吞咽、质地、复发预防与食谱示例。">
-        <span class="recipe-year">2026</span>
-        <h3>成人脑卒中食养指南（2026年版）</h3>
-        <p>脑卒中恢复期、后遗症期人群；重点查吞咽、质地、复发预防与食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100087/202604/a69d2fce21e040dc96cbc40b923a06d3.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人骨质疏松症食养指南（2026年版） 成人骨质疏松症人群；重点查钙、维生素D、蛋白质、日晒运动与食谱示例。">
-        <span class="recipe-year">2026</span>
-        <h3>成人骨质疏松症食养指南（2026年版）</h3>
-        <p>成人骨质疏松症人群；重点查钙、维生素D、蛋白质、日晒运动与食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100087/202604/a69d2fce21e040dc96cbc40b923a06d3.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
-      <article class="recipe-card" data-recipe-key="成人肌少症食养指南（2026年版） 成人肌少症人群；重点查蛋白质、能量、抗阻运动配合与食谱示例。">
-        <span class="recipe-year">2026</span>
-        <h3>成人肌少症食养指南（2026年版）</h3>
-        <p>成人肌少症人群；重点查蛋白质、能量、抗阻运动配合与食谱示例。</p>
-        <a class="ext-link-soft" href="https://www.nhc.gov.cn/sps/c100087/202604/a69d2fce21e040dc96cbc40b923a06d3.shtml" target="_blank" rel="noopener noreferrer">去原文附件页查食谱 ↗</a>
-      </article>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#source-text-library">开始查询食养方与食谱</a>
+      <a class="btn btn-ghost" href="#source-guides">查看官方原文入口</a>
     </div>
   </div>
 </section>
 
 
 
-<!-- ========= 2d. GitHub食养资料包与网页内查询 ========= -->
+<!-- ========= 2d. 11个食养指南 · 查询点开 ========= -->
 <section class="section" id="source-text-library">
   <div class="container container-wide">
-    <p class="eyebrow">GitHub Source & In-page Search</p>
-    <h2 class="section-h2">11个食养指南分目录查询</h2>
+    <p class="eyebrow">Food Therapy Finder</p>
+    <h2 class="section-h2">11个食养指南查询</h2>
     <p class="section-sub">
-      这里接入润圆在 GitHub 上整理的 <strong>nutrition-assistants</strong> 合集：11个国家卫生健康委食养指南方向。
-      每个方向保留官方原文入口与 GitHub 资料包链接；本页下方按指南分别展开三个子目录：指南原文、四季/地区食谱、食养方/营养方。
-      读者可以先在本页查询与阅读，需要核验时，再点击国家卫健委官方原文或 PDF。
+      参考痛风食疗指南网页的使用方式：先选择要查的内容，再搜索关键词；结果以卡片呈现，
+      想看哪一条就点开哪一条。这里按读者使用习惯整理为<strong>指南原文、食养方、四季食谱</strong>查询入口。
     </p>
 
-    <div class="guide-download-grid" id="guideDownloadGrid"><!-- JS渲染11个GitHub资料包入口 --></div>
+    <div class="guide-query-panel" aria-label="食养指南查询">
+      <div class="guide-tabs" id="foodGuideTabs" role="tablist" aria-label="查询类型">
+        <button class="guide-tab is-active" type="button" data-kind="formula" role="tab" aria-selected="true">🥗 食养方</button>
+        <button class="guide-tab" type="button" data-kind="recipe" role="tab" aria-selected="false">🍱 四季食谱</button>
+        <button class="guide-tab" type="button" data-kind="original" role="tab" aria-selected="false">📖 指南原文</button>
+      </div>
 
-    <div class="source-search-panel">
-      <label for="sourceTextSearch"><strong>搜索指南原文、四季食谱、地区食谱、食养方</strong></label>
-      <input class="filter-search source-search" id="sourceTextSearch" type="text" placeholder="例如：糖尿病 / 高血压 / 原文 / 东北 / 春季 / 食养方 / 赤小豆 / 脑卒中 / 肌少症 / 骨质疏松 / CKD" autocomplete="off" />
-      <p class="hint">搜索结果来自各资料包中的指南原文资料、四季/地区食谱、食养方/营养方文件。点击每个指南卡片里的子目录和条目即可在本页展开查看；需要核对出处时，请点 GitHub 文件、资料包或国家卫健委官方原文链接。</p>
+      <div class="filter-bar guide-filter-bar" id="guideFilterBar" aria-label="按指南筛选">
+        <!-- JS 渲染 11 个指南筛选按钮 -->
+      </div>
+
+      <div class="source-search-panel">
+        <label for="sourceTextSearch"><strong>搜索食养方、食谱或指南关键词</strong></label>
+        <input class="filter-search source-search" id="sourceTextSearch" type="text" placeholder="例如：山楂 / 春季 / 西南 / 糖尿病 / 儿童肥胖 / 证型 / 禁忌 / 蛋白质" autocomplete="off" />
+        <p class="hint">先点上方“食养方 / 四季食谱 / 指南原文”，再按疾病、人群、地区、季节、食材或证型搜索。点开结果卡片可查看详细内容；正式出处以国家卫生健康委原文为准。</p>
+      </div>
+
+      <div class="guide-result-summary" id="guideResultSummary">正在整理查询结果……</div>
     </div>
 
-    <div class="source-text-grid" id="foodGuideDocGrid"><!-- JS渲染11个指南下的原文、四季食谱与食养方分目录 --></div>
+    <div class="source-text-grid query-result-grid" id="foodGuideDocGrid"><!-- JS 渲染查询卡片 --></div>
     <p class="hint">提示：本页为科普查询入口，不做诊断、处方或个体化治疗建议；具体疾病、用药、肾病/脑卒中/儿童等特殊情况，请到医院或由医生、注册营养师面对面评估。</p>
   </div>
 </section>
@@ -407,7 +353,7 @@
     <div class="card-grid" id="libraryGrid"><!-- JS 渲染 --></div>
 
     <p class="hint">
-      本资料库为<strong>主题导引</strong>；食养指南的网页内查询请以上方 GitHub 资料包与官方原文入口为准。如需查阅完整内容，请回到上方 <a href="#source-guides">「权威指南与食养原文」</a> 里的直达链接，或国家卫生健康委员会、中国营养学会、世界卫生组织等机构官方网站。
+      本资料库为<strong>主题导引</strong>；食养指南的网页内查询请以上方查询区与官方原文入口为准。如需查阅完整内容，请回到上方 <a href="#source-guides">「权威指南与食养原文」</a> 里的直达链接，或国家卫生健康委员会、中国营养学会、世界卫生组织等机构官方网站。
     </p>
   </div>
 </section>
@@ -725,7 +671,7 @@
         <li>本站不收集访问者信息，不放置登录 / 注册 / 上传 / 支付入口。</li>
       </ul>
       <p class="muted">
-        如发现页面中有错漏、不严谨或与最新指南不一致之处，欢迎通过 GitHub Issues 或仓库留言指出。
+        如发现页面中有错漏、不严谨或与最新指南不一致之处，欢迎联系作者指出。
       </p>
     </div>
   </div>
