@@ -1051,3 +1051,13 @@ a:hover { text-decoration: underline; }
 .source-text-card h3 { margin: .35rem 0 .55rem; color: #58384d; font-size: 1.02rem; line-height: 1.35; }
 .source-text-card p, .source-text-card li { color: #6f5968; line-height: 1.75; }
 .source-text-card ul { padding-left: 1.1rem; }
+
+/* GitHub食养资料包与网页内查询 */
+.guide-download-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1.2rem 0 1.4rem; }
+.guide-download-card { background: rgba(255,255,255,0.9); border: 1px solid rgba(156,101,116,0.20); border-radius: 18px; padding: 1rem; box-shadow: 0 12px 30px rgba(91,65,79,0.08); }
+.guide-download-card h3 { margin: .35rem 0 .55rem; color: #58384d; font-size: 1.02rem; line-height: 1.35; }
+.guide-download-card p { color: #6f5968; line-height: 1.7; }
+.source-search-panel { background: rgba(255,250,247,0.9); border: 1px dashed rgba(156,101,116,0.32); border-radius: 18px; padding: 1rem; margin: 1rem 0; }
+.food-guide-doc-card details { margin-top: .75rem; }
+.food-guide-doc-card summary { cursor: pointer; color: #8a4d63; font-weight: 700; }
+.source-fulltext pre { white-space: pre-wrap; max-height: 360px; overflow: auto; background: #fffaf8; border: 1px solid rgba(156,101,116,0.18); border-radius: 14px; padding: .8rem; color: #4f404a; line-height: 1.65; font-size: .88rem; }

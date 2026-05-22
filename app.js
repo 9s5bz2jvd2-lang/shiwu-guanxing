@@ -676,16 +676,76 @@
   }
 
 
-  /* ---------- 原文与食谱查询库 ---------- */
-  const sourceTextSearch = document.querySelector("#sourceTextSearch");
-  const sourceTextCards = Array.from(document.querySelectorAll(".source-text-card"));
-  if (sourceTextSearch && sourceTextCards.length) {
-    sourceTextSearch.addEventListener("input", function () {
-      const q = this.value.trim().toLowerCase();
-      sourceTextCards.forEach((card) => {
-        const key = (card.getAttribute("data-source-key") || card.textContent || "").toLowerCase();
-        card.style.display = !q || key.includes(q) ? "" : "none";
+  /* ---------- GitHub食养资料包与网页内查询 ---------- */
+  function makeEl(tag, attrs, text) {
+    const node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (key) {
+        if (key === "class") node.className = attrs[key];
+        else if (key === "href") { node.href = attrs[key]; node.target = "_blank"; node.rel = "noopener noreferrer"; }
+        else node.setAttribute(key, attrs[key]);
+      });
+    }
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function renderFoodGuideData() {
+    const guides = window.FOOD_GUIDE_DATA || [];
+    const downloadGrid = document.querySelector("#guideDownloadGrid");
+    const docGrid = document.querySelector("#foodGuideDocGrid");
+    if (!guides.length || !downloadGrid || !docGrid) return;
+
+    const allCards = [];
+    guides.forEach(function (guide) {
+      const card = makeEl("article", { class: "guide-download-card" });
+      card.appendChild(makeEl("span", { class: "guide-tag" }, "国家卫健委 · " + guide.year));
+      card.appendChild(makeEl("h3", null, guide.title));
+      card.appendChild(makeEl("p", null, "已接入 " + guide.docCount + " 个资料文件，约 " + Math.round((guide.charCount || 0) / 1000) + " 千字，可在下方网页内搜索。"));
+      const links = makeEl("p", { class: "guide-links" });
+      links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.githubUrl }, "GitHub资料包 ↗"));
+      links.appendChild(document.createTextNode(" "));
+      links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.officialUrl }, "官方原文入口 ↗"));
+      if (guide.pdfUrl) {
+        links.appendChild(document.createTextNode(" "));
+        links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.pdfUrl }, "原文PDF ↗"));
+      }
+      card.appendChild(links);
+      downloadGrid.appendChild(card);
+
+      guide.docs.forEach(function (doc) {
+        const dcard = makeEl("article", { class: "source-text-card food-guide-doc-card" });
+        const searchText = [guide.title, guide.year, doc.label, doc.file, doc.text].join(" ").toLowerCase();
+        dcard.setAttribute("data-source-key", searchText);
+        dcard.appendChild(makeEl("span", { class: "recipe-year" }, guide.title + " · " + doc.label));
+        dcard.appendChild(makeEl("h3", null, doc.label + "：" + doc.file));
+        const snippet = (doc.text || "").replace(/\s+/g, " ").slice(0, 260);
+        dcard.appendChild(makeEl("p", null, snippet + (doc.text.length > 260 ? "……" : "")));
+        const dlinks = makeEl("p", { class: "guide-links" });
+        dlinks.appendChild(makeEl("a", { class: "ext-link-soft", href: doc.githubUrl }, "GitHub原文件 ↗"));
+        dlinks.appendChild(document.createTextNode(" "));
+        dlinks.appendChild(makeEl("a", { class: "ext-link-soft", href: doc.rawUrl }, "纯文本打开 ↗"));
+        dcard.appendChild(dlinks);
+        const details = makeEl("details", { class: "source-fulltext" });
+        details.appendChild(makeEl("summary", null, "展开网页内文本"));
+        details.appendChild(makeEl("pre", null, doc.text || ""));
+        dcard.appendChild(details);
+        docGrid.appendChild(dcard);
+        allCards.push(dcard);
       });
     });
+
+    const sourceTextSearch = document.querySelector("#sourceTextSearch");
+    if (sourceTextSearch) {
+      sourceTextSearch.addEventListener("input", function () {
+        const q = this.value.trim().toLowerCase();
+        allCards.forEach(function (card) {
+          const key = card.getAttribute("data-source-key") || "";
+          card.style.display = !q || key.includes(q) ? "" : "none";
+        });
+      });
+    }
   }
+  renderFoodGuideData();
+
 })();
