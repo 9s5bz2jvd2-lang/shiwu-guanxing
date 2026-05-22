@@ -1169,3 +1169,16 @@ a:hover { text-decoration: underline; }
 .query-table td { border:1px solid rgba(245,214,193,0.18); padding:7px 9px; vertical-align:top; }
 .query-links { margin-top: 12px; }
 @media (max-width: 720px) { .guide-tabs { grid-template-columns: 1fr; } }
+
+
+/* Panel navigation: 首页保持简洁；点击导航后只显示对应分栏 */
+.panel-hidden {
+  display: none !important;
+}
+.topbar-nav a.is-active {
+  color: #f5d6c1;
+  border-bottom: 1px solid rgba(245, 214, 193, 0.85);
+}
+.query-card-meta .recipe-year:empty {
+  display: none;
+}
