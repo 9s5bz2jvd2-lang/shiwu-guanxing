@@ -1,0 +1,122 @@
+# 部署到 GitHub Pages · 给非技术人员的步骤化指南
+
+> 整个流程**不需要写一行代码**，也**不需要在电脑上装任何软件**。准备一个能上网的电脑和一个邮箱就行。
+>
+> 站点：**食物观星 · 营养科普、生活方式健康与星空探索**
+> 英文辅助：Food, Nutrition &amp; Stargazing Learning Hub
+> 作者位：作者 / Curated by 王润圆 Runyuan Wang；公众号：圆酱说营养
+>
+> 本版新增：**观星夜宵**（夜间观星 / 马路天文 / 通宵拍星等场景的轻负担夜宵卡 + 真实文献来源）、**本月星空 · 免费天象来源**（人工维护的本月概览 + NASA / AMS / Timeanddate / NASA Night Sky Network 等免费来源 + 本地月相粗估小工具，无外部 API）。
+
+---
+
+## 一、准备一个免费的 GitHub 账号
+
+1. 浏览器打开：<https://github.com>
+2. 点击右上角 **Sign up**（注册）。
+3. 填邮箱、设置密码、起一个用户名（建议英文小写 + 数字，例如 `runyuan-nutrition`，名字会出现在你的网址里）。
+4. 收邮箱里 GitHub 发来的验证码，验证邮箱。
+
+> 不要把账号密码告诉别人。账号一旦注册好，所有后续操作都通过浏览器里登录这个账号完成。
+
+---
+
+## 二、新建一个仓库（Repository）
+
+1. 登录 GitHub 后，点右上角的「**+**」→「**New repository**」。
+2. **Repository name（仓库名）** 建议填：`xingyang-zhiku`（拼音）或 `nutrition-cosmos-hub`。
+   - 这个名字会出现在你的网址里。
+   - 也可以填 `runyuan.github.io` 这样的"用户网站"专用名（具体规则见下文第五步）。
+3. 勾选 **Public**（公开）——只有公开仓库可以免费用 GitHub Pages。
+4. 不要勾 "Add a README file"。其它选项全部留空。
+5. 点击 **Create repository**。
+
+---
+
+## 三、把本目录里的文件上传上去
+
+1. 进入你刚才新建的仓库页面，会看到一段提示。
+2. 点击页面中间的「**uploading an existing file**」链接（或顶部 **Add file → Upload files**）。
+3. 把本目录里这 **8 个文件**一次性拖进去：
+   - `index.html`
+   - `styles.css`
+   - `app.js`
+   - `README.md`
+   - `DEPLOY_GITHUB_PAGES.md`
+   - `SITE_CHECKLIST.md`
+   - `CNAME.example`
+   - `.nojekyll`
+4. 下方 "Commit changes" 处填一句简短说明，例如 `init: 食物观星 v0.1`。
+5. 点 **Commit changes**。
+6. 等待几秒钟，仓库首页会出现这些文件。
+
+> 上传过程不会用到你电脑里的"命令行"或"终端"。全部在浏览器里完成。
+
+---
+
+## 四、把 GitHub Pages 打开
+
+1. 在仓库页面顶部，点 **Settings**（设置）。
+2. 左侧菜单选 **Pages**。
+3. 在 "Build and deployment" → "Source" 里，选 **Deploy from a branch**。
+4. 在 "Branch" 那一行，选择 `main`（或 `master`），目录选 `/ (root)`，点 **Save**。
+5. 页面顶部会显示一段绿色提示，几分钟后就能看到 `Your site is live at https://<你的用户名>.github.io/<仓库名>/`。
+6. 把这个网址收藏起来——这就是你的食物观星公开地址。
+
+---
+
+## 五、（可选）用自己的域名
+
+如果你想用类似 `nutrition.yourdomain.com` 这种自定义域名：
+
+1. 在仓库里新建一个名为 `CNAME` 的文件（注意没有后缀，名字全大写）。
+2. 文件内容**只写一行**——你的域名，例如：
+
+```
+nutrition.yourdomain.com
+```
+
+3. 在自己的域名服务商那里，把这个子域名 `CNAME` 解析到 `<你的用户名>.github.io`。
+4. 回 GitHub 仓库 Settings → Pages，在 "Custom domain" 里填上同一个域名，点 Save。
+5. 等待 DNS 生效（通常几分钟到一两小时），打开浏览器访问该域名。
+
+> 如果暂时不打算用自定义域名，本目录里的 `CNAME.example` 可以直接忽略，**不需要**把它改名为 `CNAME`。
+
+---
+
+## 六、修改与重新发布
+
+后续如果想改文字、加资料库条目、加星空卡片，做法很简单：
+
+1. 直接在 GitHub 仓库网页里，点开要改的文件（比如 `index.html`）。
+2. 点右上角的铅笔图标 ✏️ 编辑。
+3. 修改完拖到下方，写一句 commit 说明，例如 `更新：补充维生素 D 卡片`，点 **Commit changes**。
+4. 等一两分钟，刷新公开网址就能看到更新。
+
+---
+
+## 七、出问题怎么办
+
+- **打开网址显示 404**：通常是 GitHub Pages 还在部署，等 1–3 分钟刷新即可。
+- **页面没样式 / 没排版**：先确认 `styles.css` 和 `app.js` 是否和 `index.html` 在**同一层目录**（不要放进子文件夹）。
+- **改完不更新**：浏览器可能缓存了旧版本，按住 `Shift` 再刷新（或 `Cmd/Ctrl + Shift + R`）。
+- **想把仓库设为只对自己可见**：本站需要公开发布访问，不建议设为私有；如果不想再公开，删除仓库或在 Settings → Pages 里关闭 Pages 即可。
+
+---
+
+## 八、安全提醒
+
+- 不要把账号密码、邮箱验证码截图给任何人；任何要你提供 GitHub 登录信息的"代发"服务都需要警惕。
+- 仓库里**不要**上传你的化验单、患者信息、身份证号、手机号、聊天截图。
+- 仓库里**不要**放任何账号密码、访问凭证、密钥文件或内部资料。
+- 本仓库设计上只包含科普文本和静态前端代码，不需要任何凭证；请保持这一点。
+
+---
+
+## 完成
+
+按以上 4 步走完，你就拥有了一个**永久免费的科普网站**：
+
+> **食物观星 · 营养科普、生活方式健康与星空探索**
+> Food, Nutrition &amp; Stargazing Learning Hub
+> 作者 / Curated by：王润圆 Runyuan Wang｜公众号：圆酱说营养
