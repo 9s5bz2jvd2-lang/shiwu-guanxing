@@ -1061,3 +1061,8 @@ a:hover { text-decoration: underline; }
 .food-guide-doc-card details { margin-top: .75rem; }
 .food-guide-doc-card summary { cursor: pointer; color: #8a4d63; font-weight: 700; }
 .source-fulltext pre { white-space: pre-wrap; max-height: 360px; overflow: auto; background: #fffaf8; border: 1px solid rgba(156,101,116,0.18); border-radius: 14px; padding: .8rem; color: #4f404a; line-height: 1.65; font-size: .88rem; }
+
+.guide-recipe-card { display: flex; flex-direction: column; gap: .55rem; }
+.guide-recipe-card .source-fulltext { margin-top: .35rem; border-top: 1px dashed rgba(156,101,116,0.22); padding-top: .55rem; }
+.source-fulltext summary { cursor: pointer; color: var(--primary-ink); font-weight: 650; line-height: 1.55; }
+.source-fulltext summary:hover { text-decoration: underline; }

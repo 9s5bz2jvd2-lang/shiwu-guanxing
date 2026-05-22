@@ -690,6 +690,14 @@
     return node;
   }
 
+  function shouldShowGuideDoc(doc) {
+    const label = doc.label || "";
+    const file = doc.file || "";
+    const key = (label + " " + file).toLowerCase();
+    if (/knowledge_base|main-guide/.test(key)) return false;
+    return /食谱|食养方|营养方|recipes|formula|dietary_formulas/.test(key);
+  }
+
   function renderFoodGuideData() {
     const guides = window.FOOD_GUIDE_DATA || [];
     const downloadGrid = document.querySelector("#guideDownloadGrid");
@@ -698,10 +706,12 @@
 
     const allCards = [];
     guides.forEach(function (guide) {
+      const docs = (guide.docs || []).filter(shouldShowGuideDoc);
+
       const card = makeEl("article", { class: "guide-download-card" });
       card.appendChild(makeEl("span", { class: "guide-tag" }, "国家卫健委 · " + guide.year));
       card.appendChild(makeEl("h3", null, guide.title));
-      card.appendChild(makeEl("p", null, "已接入 " + guide.docCount + " 个资料文件，约 " + Math.round((guide.charCount || 0) / 1000) + " 千字，可在下方网页内搜索。"));
+      card.appendChild(makeEl("p", null, "资料包入口：包含该指南方向的公开整理文件与可下载文本。本页下方仅展开食谱、地区/四季示例和食养方，官方依据请点国家卫健委入口核对。"));
       const links = makeEl("p", { class: "guide-links" });
       links.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.githubUrl }, "GitHub资料包 ↗"));
       links.appendChild(document.createTextNode(" "));
@@ -713,26 +723,35 @@
       card.appendChild(links);
       downloadGrid.appendChild(card);
 
-      guide.docs.forEach(function (doc) {
-        const dcard = makeEl("article", { class: "source-text-card food-guide-doc-card" });
-        const searchText = [guide.title, guide.year, doc.label, doc.file, doc.text].join(" ").toLowerCase();
-        dcard.setAttribute("data-source-key", searchText);
-        dcard.appendChild(makeEl("span", { class: "recipe-year" }, guide.title + " · " + doc.label));
-        dcard.appendChild(makeEl("h3", null, doc.label + "：" + doc.file));
-        const snippet = (doc.text || "").replace(/\s+/g, " ").slice(0, 260);
-        dcard.appendChild(makeEl("p", null, snippet + (doc.text.length > 260 ? "……" : "")));
-        const dlinks = makeEl("p", { class: "guide-links" });
-        dlinks.appendChild(makeEl("a", { class: "ext-link-soft", href: doc.githubUrl }, "GitHub原文件 ↗"));
-        dlinks.appendChild(document.createTextNode(" "));
-        dlinks.appendChild(makeEl("a", { class: "ext-link-soft", href: doc.rawUrl }, "纯文本打开 ↗"));
-        dcard.appendChild(dlinks);
+      const dcard = makeEl("article", { class: "source-text-card food-guide-doc-card guide-recipe-card" });
+      const searchText = [guide.title, guide.year].concat(docs.map(function (doc) {
+        return [doc.label, doc.file, doc.text].join(" ");
+      })).join(" ").toLowerCase();
+      dcard.setAttribute("data-source-key", searchText);
+      dcard.appendChild(makeEl("span", { class: "recipe-year" }, "国家卫健委 · " + guide.year));
+      dcard.appendChild(makeEl("h3", null, guide.title));
+      dcard.appendChild(makeEl("p", null, docs.length ? "下方可直接展开本指南相关食谱、地区/四季示例和食养方。" : "该资料包暂无单独的食谱或食养方文件，请以 GitHub 资料包为准。"));
+
+      const dlinks = makeEl("p", { class: "guide-links" });
+      dlinks.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.githubUrl }, "资料包 ↗"));
+      dlinks.appendChild(document.createTextNode(" "));
+      dlinks.appendChild(makeEl("a", { class: "ext-link-soft", href: guide.officialUrl }, "官方原文 ↗"));
+      dcard.appendChild(dlinks);
+
+      docs.forEach(function (doc) {
         const details = makeEl("details", { class: "source-fulltext" });
-        details.appendChild(makeEl("summary", null, "展开网页内文本"));
+        details.appendChild(makeEl("summary", null, "查看" + doc.label + "：" + doc.file));
+        const flinks = makeEl("p", { class: "guide-links" });
+        flinks.appendChild(makeEl("a", { class: "ext-link-soft", href: doc.githubUrl }, "GitHub文件 ↗"));
+        flinks.appendChild(document.createTextNode(" "));
+        flinks.appendChild(makeEl("a", { class: "ext-link-soft", href: doc.rawUrl }, "纯文本打开 ↗"));
+        details.appendChild(flinks);
         details.appendChild(makeEl("pre", null, doc.text || ""));
         dcard.appendChild(details);
-        docGrid.appendChild(dcard);
-        allCards.push(dcard);
       });
+
+      docGrid.appendChild(dcard);
+      allCards.push(dcard);
     });
 
     const sourceTextSearch = document.querySelector("#sourceTextSearch");
