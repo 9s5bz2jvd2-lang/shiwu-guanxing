@@ -675,4 +675,17 @@
     });
   }
 
+
+  /* ---------- 原文与食谱查询库 ---------- */
+  const sourceTextSearch = document.querySelector("#sourceTextSearch");
+  const sourceTextCards = Array.from(document.querySelectorAll(".source-text-card"));
+  if (sourceTextSearch && sourceTextCards.length) {
+    sourceTextSearch.addEventListener("input", function () {
+      const q = this.value.trim().toLowerCase();
+      sourceTextCards.forEach((card) => {
+        const key = (card.getAttribute("data-source-key") || card.textContent || "").toLowerCase();
+        card.style.display = !q || key.includes(q) ? "" : "none";
+      });
+    });
+  }
 })();

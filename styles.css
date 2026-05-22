@@ -1042,3 +1042,12 @@ a:hover { text-decoration: underline; }
 .recipe-card h3 { margin: .35rem 0 .45rem; color: #58384d; font-size: 1rem; line-height: 1.35; }
 .recipe-card p { margin: 0 0 .75rem; color: #6f5968; line-height: 1.7; }
 .recipe-year { display: inline-flex; align-items: center; border-radius: 999px; padding: .18rem .55rem; background: #f4d8df; color: #77455a; font-size: .78rem; font-weight: 700; }
+
+
+/* 原文与食谱查询库 */
+.source-search { width: min(820px, 100%); margin: 0 auto 1.2rem; display: block; }
+.source-text-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+.source-text-card { background: rgba(255,255,255,0.88); border: 1px solid rgba(156,101,116,0.20); border-radius: 18px; padding: 1rem; box-shadow: 0 12px 30px rgba(91,65,79,0.08); }
+.source-text-card h3 { margin: .35rem 0 .55rem; color: #58384d; font-size: 1.02rem; line-height: 1.35; }
+.source-text-card p, .source-text-card li { color: #6f5968; line-height: 1.75; }
+.source-text-card ul { padding-left: 1.1rem; }
