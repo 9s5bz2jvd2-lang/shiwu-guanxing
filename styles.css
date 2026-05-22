@@ -916,6 +916,137 @@ a:hover { text-decoration: underline; }
   margin-bottom: 4px;
 }
 
+/* ===== 权威指南与食养原文 ===== */
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 4px;
+}
+.guide-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s ease, transform 0.06s ease;
+}
+.guide-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.guide-card .guide-tag {
+  display: inline-block;
+  font-size: 11.5px;
+  letter-spacing: 0.4px;
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.guide-card h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+  color: var(--primary-ink);
+}
+.guide-card p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.78;
+}
+.guide-card .guide-topics {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.guide-card .guide-topics strong { color: var(--primary-ink); }
+.guide-card .guide-links {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.guide-card .guide-links .ext-link-soft { margin-left: 0; }
+
+.guide-note {
+  margin-top: 22px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.guide-note h3 {
+  font-size: 16.5px;
+  margin: 0 0 10px;
+  color: var(--primary-ink);
+}
+.guide-note .src {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+}
+.guide-note .src strong { color: var(--primary-ink); }
+
+/* ===== AI 食养 skill / 资料包说明子块 ===== */
+.skill-block {
+  margin-top: 32px;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 24px;
+  box-shadow: var(--shadow);
+}
+.skill-block-title {
+  font-size: 19px;
+  margin: 0 0 10px;
+  color: var(--primary-ink);
+}
+.skill-block-intro {
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.skill-block-intro strong { color: var(--primary-ink); }
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.skill-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+}
+.skill-card h4 {
+  font-size: 15.5px;
+  margin: 0 0 8px;
+  color: var(--primary-ink);
+}
+.skill-card p {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  line-height: 1.78;
+}
+.skill-card p:last-child { margin-bottom: 0; }
+.skill-card strong { color: var(--primary-ink); }
+.skill-card .skill-no strong { color: var(--accent); }
+
+.skill-note {
+  margin: 18px 0 0;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.skill-note strong { color: var(--primary-ink); }
+
 /* ===== 响应式 ===== */
 @media (max-width: 900px) {
   .topbar { padding: 12px 16px; }
@@ -934,7 +1065,9 @@ a:hover { text-decoration: underline; }
   .ai-grid,
   .cosmos-grid,
   .nightsnack-grid,
-  .skywatch-grid {
+  .skywatch-grid,
+  .guides-grid,
+  .skill-grid {
     grid-template-columns: 1fr;
   }
   .calc-row { grid-template-columns: 1fr; }
