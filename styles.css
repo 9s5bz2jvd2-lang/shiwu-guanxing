@@ -1066,3 +1066,23 @@ a:hover { text-decoration: underline; }
 .guide-recipe-card .source-fulltext { margin-top: .35rem; border-top: 1px dashed rgba(156,101,116,0.22); padding-top: .55rem; }
 .source-fulltext summary { cursor: pointer; color: var(--primary-ink); font-weight: 650; line-height: 1.55; }
 .source-fulltext summary:hover { text-decoration: underline; }
+
+/* 食养指南分目录：不改变整体配色，只补层级结构 */
+.directory-list { display: flex; flex-wrap: wrap; gap: .45rem; margin: .2rem 0 .5rem; }
+.directory-list span { border-radius: 999px; padding: .2rem .58rem; background: #fff2ee; color: #77455a; font-size: .78rem; font-weight: 700; border: 1px solid rgba(156,101,116,0.16); }
+.guide-subdir { margin-top: .85rem; padding: .85rem; border: 1px solid rgba(156,101,116,0.18); border-radius: 16px; background: rgba(255,250,247,0.72); }
+.guide-subdir h4 { margin: 0 0 .4rem; color: #58384d; font-size: .98rem; }
+.subdir-note, .entry-meta, .empty-note { margin: .15rem 0 .55rem; color: #7a6472; font-size: .86rem; line-height: 1.65; }
+.season-group, .region-group, .formula-group, .entry-details { margin-top: .52rem; }
+.season-group > summary, .formula-group > summary { cursor: pointer; font-weight: 800; color: #77455a; background: #fff7f3; border-radius: 12px; padding: .48rem .65rem; border: 1px solid rgba(156,101,116,0.14); }
+.region-group > summary { cursor: pointer; font-weight: 700; color: #6f5968; padding: .38rem .55rem; }
+.entry-details > summary { cursor: pointer; color: #58384d; font-weight: 650; line-height: 1.55; padding: .22rem 0; }
+.entry-details > summary:hover { text-decoration: underline; }
+.original-subdir { border-left: 4px solid #b78aa0; }
+.recipe-subdir { border-left: 4px solid #d6a05f; }
+.formula-subdir { border-left: 4px solid #9c6574; }
+.contact-panel { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 24px; align-items: center; }
+.wechat-qr { margin: 0; text-align: center; }
+.wechat-qr img { width: 176px; max-width: 100%; border-radius: 18px; border: 1px solid rgba(156,101,116,0.22); box-shadow: 0 12px 30px rgba(91,65,79,0.10); background: #fff; padding: 8px; }
+.wechat-qr figcaption { margin-top: .55rem; color: #77455a; font-size: .86rem; font-weight: 700; }
+@media (max-width: 760px) { .contact-panel { grid-template-columns: 1fr; } .wechat-qr { justify-self: start; } }
