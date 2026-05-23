@@ -1062,7 +1062,9 @@
       while (end < lines.length) {
         const probe = lines[end].trim();
         if (/^\s*\d+[.、]\s*(?:\*\*)?/.test(lines[end]) || /^#{1,6}\s+/.test(lines[end])) break;
-        if (/^-\s*\*\*(食材|方剂|食材\/方剂|关键原文|核心句|适用人群|证据|来源|说明|注|注意|搭配|建议)/.test(probe)) break;
+        // Keep detail bullets such as 食材/方剂/制作方法 inside the same formula item.
+        // The previous version stopped before those bullets, so expanded details
+        // repeated the short card text instead of showing useful full content.
         end += 1;
       }
       return end;
@@ -1146,15 +1148,56 @@
     return { guides: guides, all: all };
   }
 
+  function cleanMetaPart(value) {
+    const v = String(value || "").trim();
+    if (!v || /^未标注/.test(v) || v === "见全文") return "";
+    return v;
+  }
+
   function cardMeta(item) {
-    if (item.kind === "formula") return [item.guideTitle, item.syndrome, item.category].filter(Boolean).join(" · ");
-    if (item.kind === "recipe") return [item.guideTitle, item.season, item.region, item.subtype].filter(Boolean).join(" · ");
+    if (item.kind === "formula") {
+      return [item.guideTitle, cleanMetaPart(item.syndrome), cleanMetaPart(item.category)].filter(Boolean).join(" · ");
+    }
+    if (item.kind === "recipe") {
+      const season = cleanMetaPart(item.season);
+      const region = cleanMetaPart(item.region);
+      const subtype = cleanMetaPart(item.subtype);
+      const parts = [item.guideTitle, season, region, subtype].filter(Boolean);
+      if (!season && !region && subtype) {
+        parts.push("本指南按证型提供食谱示例，官方未按季节/地区细分");
+      } else if (!season || !region) {
+        parts.push("官方未细分" + (!season ? "季节" : "") + (!season && !region ? "/" : "") + (!region ? "地区" : ""));
+      }
+      return parts.join(" · ");
+    }
     return [item.guideTitle, "官方原文/核心内容"].filter(Boolean).join(" · ");
+  }
+
+  function compactLine(text) {
+    return String(text || "")
+      .replace(/^#{1,6}\s+/gm, "")
+      .replace(/\|/g, " ")
+      .replace(/\*\*/g, "")
+      .replace(/^[-*]\s+/gm, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function formulaCardSummary(item, safeContent) {
+    const lines = String(safeContent || "").split(/\n/).map(compactLine).filter(Boolean);
+    const title = compactLine(item.title || "");
+    const useful = lines.find(function (line) {
+      if (title && line.indexOf(title) >= 0 && line.length <= title.length + 24) return false;
+      return /(适用|人群|功效|特点|用于|适合|推荐)/.test(line);
+    });
+    if (useful) return excerpt(useful, 76);
+    const meta = [cleanMetaPart(item.syndrome), cleanMetaPart(item.category)].filter(Boolean).join(" · ");
+    return (meta ? meta + "。" : "") + "卡片仅作概览，食材、用量和做法请点开查看。";
   }
 
   function renderResultCard(item) {
     const card = makeEl("article", { class: "query-card query-card-" + item.kind });
-    const badge = item.kind === "formula" ? "食养方" : item.kind === "recipe" ? "四季食谱" : "指南原文";
+    const badge = item.kind === "formula" ? "食养方" : item.kind === "recipe" ? "食谱示例" : "指南原文";
     const meta = makeEl("div", { class: "query-card-meta" });
     meta.appendChild(makeEl("span", { class: "recipe-year" }, item.year || ""));
     meta.appendChild(makeEl("span", { class: "query-kind-badge" }, badge));
@@ -1162,7 +1205,8 @@
     card.appendChild(makeEl("h3", null, item.title || item.guideTitle || "查询结果"));
     card.appendChild(makeEl("p", { class: "query-guide-line" }, cardMeta(item)));
     const safeContent = publicText(item.content || "");
-    card.appendChild(makeEl("p", { class: "query-excerpt" }, excerpt(safeContent, 150)));
+    const cardSummary = item.kind === "formula" ? formulaCardSummary(item, safeContent) : excerpt(safeContent, 150);
+    card.appendChild(makeEl("p", { class: "query-excerpt" }, cardSummary));
 
     const details = makeEl("details", { class: "query-details" });
     details.appendChild(makeEl("summary", null, "点开查看详细内容"));
@@ -1215,7 +1259,7 @@
       items.slice(0, displayLimit).forEach(function (item) { docGrid.appendChild(renderResultCard(item)); });
       if (!items.length) docGrid.appendChild(makeEl("p", { class: "empty-note" }, "没有匹配结果。可以换一个关键词，或切换到其他指南/查询类型。"));
       if (summary) {
-        const kindLabel = activeKind === "formula" ? "食养方" : activeKind === "recipe" ? "四季食谱" : "指南原文";
+        const kindLabel = activeKind === "formula" ? "食养方" : activeKind === "recipe" ? "食谱示例" : "指南原文";
         summary.textContent = "当前显示：" + kindLabel + " · " + items.length + " 条结果" + (items.length > displayLimit ? "（先显示前 " + displayLimit + " 条，可继续筛选或输入关键词缩小范围）" : "");
       }
     }
