@@ -813,7 +813,6 @@
       }
     });
     if (!items.length) parseRecipeDocByLines(doc).forEach(function (x) { items.push(x); });
-    if (!items.length && (doc.text || "").trim()) items.push({ kind: "recipe", season: "未标注季节", region: currentRegion, subtype: "", title: doc.label || doc.file || "食谱资料", content: doc.text, file: doc.file });
     return items;
   }
 
@@ -871,10 +870,16 @@
     return String(text || "")
       .split(/\n/)
       .filter(function (line) {
-        const hiddenWords = new RegExp("\\bKPK\\b|源文件|知识库|数据文件|专门" + "代理|对应KPK|sk" + "ill|git" + "hub|rawUrl|git" + "hubUrl", "i");
+        const hiddenWords = new RegExp(
+          "\\bKPK\\b|KPK-\\d+|知识点|知识文件清单|源文件|数据文件|完整.*数据|完整.*文件|专门" +
+          "代理|对应KPK|sk" + "ill|git" + "hub|rawUrl|git" + "hubUrl|knowledge_base|recipes_data|dietary_formulas|kpk_|\\.md|\\.txt",
+          "i"
+        );
         return !hiddenWords.test(line);
       })
       .join("\n")
+      .replace(/（[^）]*(?:\.md|\.txt|KPK|kpk|data|Data)[^）]*）/g, "")
+      .replace(/\([^)]*(?:\.md|\.txt|KPK|kpk|data|Data)[^)]*\)/g, "")
       .replace(/附录\s*\d+\s*/g, "")
       .trim();
   }

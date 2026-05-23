@@ -217,7 +217,15 @@ a:hover { text-decoration: underline; }
     radial-gradient(0.9px 0.9px at 75% 78%, rgba(230,183,104,0.30) 50%, transparent 60%);
   opacity: 0.6;
 }
-.hero-inner { position: relative; z-index: 1; }
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.78fr);
+  gap: 42px;
+  align-items: center;
+}
+.hero-copy { min-width: 0; }
 
 .eyebrow {
   display: inline-block;
@@ -352,6 +360,172 @@ a:hover { text-decoration: underline; }
   color: #aa888d;
   margin: 0;
   letter-spacing: 0.3px;
+}
+
+
+.hero-visual {
+  position: relative;
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+.visual-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 248, 244, 0.72);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.72), rgba(249,229,224,0.42)),
+    radial-gradient(80% 80% at 78% 0%, rgba(77,58,100,0.42), transparent 64%);
+  box-shadow: 0 26px 60px rgba(95,45,59,0.18), inset 0 1px 0 rgba(255,255,255,0.86);
+  backdrop-filter: blur(8px) saturate(120%);
+}
+.visual-card-main { min-height: 400px; padding: 26px; }
+.visual-card-main::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.44);
+  pointer-events: none;
+}
+.visual-sky {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 210px;
+  background:
+    radial-gradient(circle at 76% 28%, rgba(245,224,187,0.92), transparent 7%),
+    linear-gradient(145deg, #49375f 0%, #7b5576 55%, rgba(201,138,161,0.22) 100%);
+}
+.visual-sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 32%, rgba(245,224,187,0.9) 50%, transparent 60%),
+    radial-gradient(1.2px 1.2px at 26% 22%, rgba(245,224,187,0.75) 50%, transparent 60%),
+    radial-gradient(1px 1px at 54% 38%, rgba(245,224,187,0.8) 50%, transparent 60%),
+    radial-gradient(1.4px 1.4px at 82% 64%, rgba(245,224,187,0.88) 50%, transparent 60%);
+}
+.visual-moon {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  right: 48px;
+  top: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff8e8 0%, #f4dcb2 72%);
+  box-shadow: 0 0 34px rgba(245,224,187,0.6);
+}
+.visual-orbit {
+  position: absolute;
+  width: 230px;
+  height: 92px;
+  left: 34px;
+  top: 56px;
+  border: 1px solid rgba(245,224,187,0.36);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+.visual-star {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #f5e0bb;
+  clip-path: polygon(50% 0, 60% 38%, 100% 50%, 60% 62%, 50% 100%, 40% 62%, 0 50%, 40% 38%);
+  opacity: .86;
+}
+.visual-star.s1 { left: 62px; top: 42px; }
+.visual-star.s2 { left: 156px; top: 92px; transform: scale(.7); }
+.visual-star.s3 { right: 118px; top: 132px; transform: scale(.55); }
+.visual-table {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 76px;
+  height: 168px;
+  border-radius: 34px 34px 24px 24px;
+  background: linear-gradient(180deg, rgba(255,250,247,0.9), rgba(245,221,216,0.92));
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: 0 -14px 30px rgba(77,58,100,0.08);
+}
+.visual-plate {
+  position: absolute;
+  left: 34px;
+  top: 30px;
+  width: 142px;
+  height: 104px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffdf9 0%, #f8eee5 58%, #d8b7a7 62%, #fffaf4 68%);
+  box-shadow: 0 16px 28px rgba(95,45,59,0.12);
+}
+.leaf, .grain, .berry { position: absolute; display: block; }
+.leaf { width: 42px; height: 19px; border-radius: 90% 10% 90% 10%; background: #8fa66f; transform: rotate(-24deg); }
+.leaf-a { left: 46px; top: 38px; }
+.leaf-b { left: 68px; top: 54px; background: #b5a66f; transform: rotate(28deg); }
+.grain { width: 34px; height: 16px; border-radius: 50%; background: #e9c27f; }
+.grain-a { left: 38px; top: 62px; }
+.grain-b { left: 78px; top: 32px; background: #d8a96b; }
+.berry { width: 14px; height: 14px; border-radius: 50%; background: #a8525e; }
+.berry-a { left: 86px; top: 66px; }
+.berry-b { left: 60px; top: 28px; background: #c98aa1; }
+.visual-cup {
+  position: absolute;
+  right: 56px;
+  top: 54px;
+  width: 82px;
+  height: 64px;
+  border-radius: 0 0 28px 28px;
+  background: linear-gradient(180deg, #fff8f0, #e9cfc6);
+  border: 1px solid rgba(122,60,74,0.16);
+  box-shadow: 0 14px 24px rgba(95,45,59,0.11);
+}
+.visual-cup::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  top: 12px;
+  width: 28px;
+  height: 30px;
+  border: 7px solid #e9cfc6;
+  border-left: 0;
+  border-radius: 0 22px 22px 0;
+}
+.visual-cup span {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: -10px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(168,82,94,0.24);
+}
+.visual-note {
+  position: absolute;
+  left: 42px;
+  right: 42px;
+  bottom: 24px;
+  display: grid;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(255, 250, 247, 0.76);
+  border: 1px solid rgba(255,255,255,0.7);
+  color: var(--primary-deep);
+}
+.visual-note strong { font-size: 15px; letter-spacing: .8px; }
+.visual-note span { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
+.visual-mini-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.visual-mini-row span {
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.58);
+  border: 1px solid rgba(201,138,161,0.34);
+  color: var(--primary-ink);
+  font-size: 12.5px;
+  box-shadow: 0 8px 18px rgba(95,45,59,0.08);
 }
 
 /* ===== 关于本站 ===== */
@@ -1181,4 +1355,24 @@ a:hover { text-decoration: underline; }
 }
 .query-card-meta .recipe-year:empty {
   display: none;
+}
+
+
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+  .hero-visual { min-height: 360px; }
+  .visual-card-main { min-height: 340px; }
+  .visual-sky { height: 176px; }
+  .visual-table { bottom: 64px; height: 142px; }
+  .visual-note { left: 28px; right: 28px; }
+}
+
+@media (max-width: 560px) {
+  .hero { padding: 54px 0 48px; }
+  .hero-zh { font-size: 42px; letter-spacing: 5px; }
+  .hero-visual { min-height: 320px; }
+  .visual-card-main { min-height: 310px; padding: 18px; border-radius: 24px; }
+  .visual-table { left: 18px; right: 18px; }
+  .visual-plate { left: 20px; transform: scale(.86); transform-origin: left top; }
+  .visual-cup { right: 38px; transform: scale(.84); transform-origin: right top; }
 }
