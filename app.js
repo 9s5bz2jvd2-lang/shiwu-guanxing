@@ -710,10 +710,23 @@
     return String(t || "")
       .replace(/^#+\s*/, "")
       .replace(/^[-—–\s]+/, "")
-      .replace(/^[（(]?[一二三四五六七八九十]+[）)、.．\s]*/, "")
+      .replace(/^\*+|\*+$/g, "")
+      .replace(/^[（(]?[一二三四五六七八九十]+[）)、.．\s]+/, "")
       .replace(/^表\s*\d+(?:\.\d+)?\s*/i, "")
       .replace(/^\[阶段\d+\]\s*/, "")
+      .replace(/^\*+|\*+$/g, "")
       .trim();
+  }
+
+  function publicTitle(t, fallback) {
+    const title = cleanTitle(t)
+      .replace(/^KPK-\d+[:：\s]*/i, "")
+      .replace(/[（(]附录\s*\d+[）)]/g, "")
+      .replace(/附录\s*\d+/g, "")
+      .replace(/[（(][^）)]*(?:\.md|\.txt|KPK|kpk|data|Data)[^）)]*[）)]/g, "")
+      .replace(/^[：:\s]+|[：:\s]+$/g, "")
+      .trim();
+    return title || fallback || "食谱示例";
   }
 
   function seasonFromTitle(title) {
@@ -809,7 +822,7 @@
         const seasonShort = entrySeason.replace("季", "");
         if (entrySeason !== "未标注季节" && t.indexOf(seasonShort) < 0) prefix.push(entrySeason);
         if (currentType && !/地区|季|食谱/.test(currentType)) prefix.push(currentType);
-        items.push({ kind: "recipe", season: entrySeason, region: entryRegion, subtype: currentType || "", title: (prefix.length ? prefix.join(" · ") + " · " : "") + t, content: sec.content || doc.text || "", file: doc.file });
+        items.push({ kind: "recipe", season: entrySeason, region: entryRegion, subtype: currentType || "", title: (prefix.length ? prefix.join(" · ") + " · " : "") + publicTitle(t), content: publicText(sec.content || doc.text || ""), file: doc.file });
       }
     });
     if (!items.length) parseRecipeDocByLines(doc).forEach(function (x) { items.push(x); });
@@ -831,7 +844,7 @@
     });
     return starts.map(function (st, i) {
       const end = starts[i + 1] ? starts[i + 1].idx : Math.min(lines.length, st.idx + 90);
-      return { kind: "recipe", season: st.season, region: st.region, subtype: "", title: st.region + " · " + st.title, content: lines.slice(st.idx, end).join("\n").trim(), file: doc.file };
+      return { kind: "recipe", season: st.season, region: st.region, subtype: "", title: st.region + " · " + publicTitle(st.title), content: publicText(lines.slice(st.idx, end).join("\n").trim()), file: doc.file };
     });
   }
 
@@ -1036,7 +1049,64 @@
     return items;
   }
 
+  function parseFormulaDocStrict(doc) {
+    const text = doc.text || "";
+    const lines = text.split(/\n/);
+    const items = [];
+    let inFormula = /食养方|营养方|formula|dietary_formulas/.test(((doc.label || "") + " " + (doc.file || "")).toLowerCase());
+    let syndrome = "未标注证型";
+    let category = "食养方";
+
+    function nextFormulaEnd(start) {
+      let end = start + 1;
+      while (end < lines.length) {
+        const probe = lines[end].trim();
+        if (/^\s*\d+[.、]\s*(?:\*\*)?/.test(lines[end]) || /^#{1,6}\s+/.test(lines[end])) break;
+        if (/^-\s*\*\*(食材|方剂|食材\/方剂|关键原文|核心句|适用人群|证据|来源|说明|注|注意|搭配|建议)/.test(probe)) break;
+        end += 1;
+      }
+      return end;
+    }
+
+    lines.forEach(function (line, idx) {
+      const t = line.trim();
+      const h = t.match(/^#{1,6}\s+(.+)/);
+      if (h) {
+        const title = cleanTitle(h[1]);
+        if (/KPK-\d+/.test(title) && /(食养方举例|中医食养方|不同中医证型食养方)/.test(title)) inFormula = true;
+        if (inFormula && /(定义|流行病学|补充知识|疾病背景|地区食谱|食谱概览|食物选择|交换表)/.test(title)) inFormula = false;
+        if (inFormula && /证|型/.test(title) && !/(食养方|茶饮|药膳|经验方|核心知识|适用人群|建议|注意|关联|概述|总览)/.test(title)) syndrome = title;
+        if (inFormula && /茶饮|经验方/.test(title)) category = "茶饮方";
+        else if (inFormula && /药膳|膳方|食养方|营养方|食材\/方剂/.test(title)) category = "食养方";
+      }
+
+      const boldOnly = t.match(/^\*\*([^*]+)\*\*[:：]?\s*$/);
+      if (inFormula && boldOnly) {
+        const title = cleanTitle(boldOnly[1]);
+        if (/证|型/.test(title) && !/(食养方|茶饮|药膳|经验方)/.test(title)) { syndrome = title; return; }
+        if (/茶饮|经验方/.test(title)) { category = "茶饮方"; return; }
+        if (/药膳|膳方|食养方|营养方/.test(title)) { category = "食养方"; return; }
+      }
+
+      if (!inFormula) return;
+      const m = t.match(/^\d+[.、]\s*\*\*([^*]+)\*\*[:：]?\s*(.*)$/) ||
+        t.match(/^\d+[.、]\s*([^：:]{2,36}(?:方|茶|饮|汤|粥|饭|羹|饼|包子|丸|鸡|肉|鱼|排骨))[:：]\s*(.*)$/);
+      if (!m) return;
+      const title = cleanTitle(m[1]);
+      if (!title || /核心知识|适用人群|注意|关联|能量|供能比|全天天限量|KPK|分类|概览|总览/.test(title)) return;
+      const end = nextFormulaEnd(idx);
+      const content = lines.slice(idx, end).join("\n").trim();
+      if (!/(材料|配方|主要材料|制作方法|用法|用量|加水|煎煮|佐餐|食用|g|ml|mL|克)/.test(content)) return;
+      items.push({ kind: "formula", syndrome: syndrome, category: category, title: title, content: content, file: doc.file });
+    });
+    return items;
+  }
+
   function parseFormulaDocForCards(doc) {
+    const strictItems = parseFormulaDocStrict(doc);
+    if (strictItems.length) return strictItems;
+    const key = ((doc.label || "") + " " + (doc.file || "")).toLowerCase();
+    if (!/食养方|营养方|formula|dietary_formulas/.test(key)) return [];
     const slice = formulaSlice(doc);
     if (!slice) return [];
     const localDoc = { text: slice, file: doc.file, label: doc.label };
