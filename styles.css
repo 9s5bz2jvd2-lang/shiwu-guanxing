@@ -1704,3 +1704,10 @@ a:hover { text-decoration: underline; }
   border-color: rgba(255,255,255,0.18);
   color: #ffd8df;
 }
+
+.contact-email {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-weight: 650;
+}
+.contact-email a { color: var(--accent); }
