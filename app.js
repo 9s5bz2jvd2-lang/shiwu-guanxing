@@ -1220,6 +1220,7 @@
     if (item.guide && item.guide.officialUrl) links.appendChild(makeEl("a", { class: "ext-link-soft", href: item.guide.officialUrl }, "官方原文入口 ↗"));
     if (item.guide && item.guide.pdfUrl) { links.appendChild(document.createTextNode(" ")); links.appendChild(makeEl("a", { class: "ext-link-soft", href: item.guide.pdfUrl }, "原文 PDF ↗")); }
     body.appendChild(links);
+    body.appendChild(makeEl("p", { class: "query-trust-note" }, "内容以国家卫健委等官方原文为准；本页只做科普整理，不替代面对面诊疗或个体化营养评估。"));
     details.appendChild(body);
     card.appendChild(details);
     return card;
@@ -1286,9 +1287,56 @@
   function initPanelNavigation() {
     const sections = Array.from(document.querySelectorAll("main > section[id]"));
     if (!sections.length) return;
-    const navLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
+    let navLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
     const panelIds = new Set(sections.map(function (s) { return s.id; }));
     const defaultPanel = "hero";
+
+
+    const panelNames = {
+      about: "关于本站",
+      "source-guides": "官方指南",
+      "how-to-use": "3 步使用说明",
+      "source-text-library": "食养与食谱查询",
+      library: "营养资料库",
+      calculator: "营养小工具",
+      cosmos: "营养与星空",
+      nightsnack: "观星夜宵",
+      skywatch: "本月星空",
+      contact: "公众号：圆酱说营养",
+      disclaimer: "免责声明"
+    };
+    const relatedPanels = {
+      about: [["source-guides", "看官方指南"], ["source-text-library", "查食养食谱"], ["contact", "关注公众号"]],
+      "source-guides": [["source-text-library", "查食养方与食谱示例"], ["how-to-use", "先看 3 步使用说明"], ["calculator", "试试营养小工具"]],
+      "how-to-use": [["source-guides", "看官方指南"], ["source-text-library", "查食养食谱"], ["calculator", "试试小工具"]],
+      "source-text-library": [["source-guides", "回到官方指南入口"], ["calculator", "试试营养小工具"], ["contact", "关注圆酱说营养"]],
+      library: [["source-guides", "看官方指南"], ["source-text-library", "查食养食谱"], ["about", "了解本站"]],
+      calculator: [["source-text-library", "查食养食谱"], ["source-guides", "核对官方指南"], ["disclaimer", "查看免责声明"]],
+      cosmos: [["nightsnack", "看观星夜宵"], ["skywatch", "看本月星空"], ["source-text-library", "回到食养查询"]],
+      nightsnack: [["cosmos", "回到营养与星空"], ["skywatch", "看本月星空"], ["calculator", "试试营养小工具"]],
+      skywatch: [["cosmos", "回到营养与星空"], ["nightsnack", "看观星夜宵"], ["contact", "关注圆酱说营养"]],
+      contact: [["source-text-library", "查食养食谱"], ["cosmos", "看营养与星空"], ["about", "了解本站"]],
+      disclaimer: [["about", "回到关于本站"], ["source-guides", "看官方指南"], ["contact", "联系作者"]]
+    };
+
+    sections.forEach(function (section) {
+      if (section.id === defaultPanel || section.querySelector(".panel-loop-top")) return;
+      const label = panelNames[section.id] || section.id;
+      const top = document.createElement("div");
+      top.className = "panel-loop panel-loop-top";
+      top.innerHTML = '<a href="#hero">← 返回首页</a><span>当前：' + label + '</span>';
+      const container = section.querySelector(".container, .container-wide");
+      if (container) container.insertBefore(top, container.firstElementChild);
+      const rel = relatedPanels[section.id] || [["hero", "返回首页"]];
+      const bottom = document.createElement("nav");
+      bottom.className = "panel-related";
+      bottom.setAttribute("aria-label", "你可能还想看");
+      bottom.innerHTML = '<strong>你可能还想看</strong>' + rel.map(function (pair) {
+        return '<a href="#' + pair[0] + '">' + pair[1] + '</a>';
+      }).join("");
+      if (container) container.appendChild(bottom);
+    });
+    navLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
 
     function showPanel(id, pushHash) {
       const target = panelIds.has(id) ? id : defaultPanel;
