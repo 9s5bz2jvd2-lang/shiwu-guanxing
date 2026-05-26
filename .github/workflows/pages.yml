@@ -1,8 +1,7 @@
 name: pages build and deployment
+# Temporary note: workflow_dispatch only; GitHub action downloads from codeload failed transiently on 2026-05-26.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
