@@ -1,5 +1,7 @@
 # 食物观星 · Food, Nutrition & Stargazing Learning Hub
 
+[English version](README.en.md)
+
 由王润圆 / Runyuan Wang 策划维护的静态网页：营养科普、生活方式健康、星空探索，以及 11 个国家卫生健康委食养指南方向的公开原文入口与网页内查询。
 
 ## 页面内容
